@@ -1,33 +1,28 @@
 package main
 
 import (
+	"database/sql"
 	"log"
-	"todo-app/internal/database"
 	"todo-app/internal/todo"
 
 	"github.com/gofiber/fiber/v2"
+	_ "github.com/lib/pq"
 )
 
 func main() {
-	// Инициализация базы данных
-	db, err := database.Connect()
+	// Подключение к базе данных
+	db, err := sql.Open("postgres", "postgres://postgres:12345@localhost:1234/tododb?sslmode=disable")
 	if err != nil {
-		log.Fatalf("Failed to connect to the database: %v", err)
+		log.Fatal("Error connecting to the database:", err)
 	}
+	defer db.Close()
 
-	// Проверяем соединение с базой данных
-	if err := db.Ping(); err != nil {
-		log.Fatalf("Database is not reachable: %v", err)
-	}
-	log.Println("Connected to the database successfully.")
-
-	// Создаем приложение Fiber
+	// Создание приложения Fiber
 	app := fiber.New()
 
 	// Регистрация маршрутов
 	todo.RegisterRoutes(app, db)
 
-	// Запуск сервера
-	log.Println("Starting server on :3000")
+	// Запуск приложения на порту 3000
 	log.Fatal(app.Listen(":3000"))
 }
