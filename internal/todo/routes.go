@@ -9,10 +9,10 @@ import (
 func RegisterRoutes(app *fiber.App, db *sql.DB) {
 	handler := NewHandler(db)
 
-	todoGroup := app.Group("/todos")
+	todoGroup := app.Group("/tasks")
 	todoGroup.Get("/", handler.GetAll)
 	todoGroup.Post("/", handler.Create)
-	todoGroup.Get("/:id", handler.GetByID)
-	todoGroup.Put("/:id", handler.Update)
-	todoGroup.Delete("/:id", handler.Delete)
+
+	// Новый маршрут для проверки состояния сервера
+	app.Get("/", handler.HealthCheck)
 }

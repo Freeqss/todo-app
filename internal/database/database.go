@@ -7,7 +7,7 @@ import (
 )
 
 func Connect() (*sql.DB, error) {
-	// Настройте DSN в соответствии с вашим окружением
-	dsn := "user=postgres password=yourpassword dbname=tododb sslmode=disable"
+	dsn := "postgres://postgres:12345@localhost:1234/tododb?sslmode=disable"
+
 	return sql.Open("postgres", dsn)
 }
